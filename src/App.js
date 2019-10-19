@@ -1,26 +1,43 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import Gif from './Gif'
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      error: '',
+      validSearchTerm: ''
+    }
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.searchTerm = React.createRef();
+  }
+  handleSubmit(event) {
+    event.preventDefault()
+    this.setState({ error: '' });
+    if (!this.searchTerm.current.value || this.searchTerm.current.value.length < 2) {
+      this.setState({error: 'Enter a word.'});
+      return;
+    }
+    this.setState({validSearchTerm: this.searchTerm.current.value});
+    this.searchTerm.current.value = ''
+  }
+
+  render() {
+    console.log('rendered')
+    return (
+      <div className="App">
+        <header className="App-header">
+          <h1>ADD A STICKER</h1>
+        </header>
+        {this.state.error && <p className="error">{this.state.error}</p>}
+        <form onSubmit={this.handleSubmit}>
+          <input ref={this.searchTerm} type="text" name="searchTerm"></input>
+        </form>
+        {this.state.validSearchTerm && <Gif searchTerm={this.state.validSearchTerm}></Gif>}
+      </div>
+    );
+  }
 }
 
 export default App;
